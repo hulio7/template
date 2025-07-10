@@ -13,7 +13,7 @@ public class UserModelCreateRequest {
     @Size(min = 2, max = 30)
     private String name;
 
-    @Size(min = 0, max = 30)
+    @Size(max = 30)
     private String surname;
 
     @Email
