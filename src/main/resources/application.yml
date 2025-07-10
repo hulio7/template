@@ -1,0 +1,10 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: template
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sportclub
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
