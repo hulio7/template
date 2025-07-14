@@ -3,7 +3,7 @@ package org.smoliagin.template.util.messageSource;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-public class ErrorsMessage {
+public class Message {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class UserMessage {

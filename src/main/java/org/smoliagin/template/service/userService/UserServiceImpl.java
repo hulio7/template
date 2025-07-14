@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.smoliagin.template.util.exceptions.ExceptionFactory.entityNotFoundException;
-import static org.smoliagin.template.util.messageSource.ErrorsMessage.UserMessage.USER_DELETE;
-import static org.smoliagin.template.util.messageSource.ErrorsMessage.UserMessage.USER_NOT_EXIST;
+import static org.smoliagin.template.util.messageSource.Message.UserMessage.USER_DELETE;
+import static org.smoliagin.template.util.messageSource.Message.UserMessage.USER_NOT_EXIST;
 import static org.smoliagin.template.util.messageSource.MessageSourceFactory.getMessage;
 
 @Service
