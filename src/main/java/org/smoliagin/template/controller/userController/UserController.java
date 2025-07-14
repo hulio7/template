@@ -27,7 +27,8 @@ public class UserController {
     private final UserMapper userMapper;
 
     @PostMapping("/user")
-    @Operation(summary = "Создание пользователя")
+    @Operation(summary = "Создание пользователя"
+            , description = "Пароль должен содержать минимум 8 символов, буквы и цифры")
     public UserModelResponse createUser (@RequestBody @Valid UserModelCreateRequest modelRequest) {
         UserDtoResponse dto= userService.createUser(userMapper.toDto(modelRequest));
         return userMapper.toModelResponse(dto);
