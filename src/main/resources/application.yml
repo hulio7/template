@@ -20,3 +20,12 @@ management:
     distribution:
       percentiles-histogram:
         "[http.server.requests]": true
+handlers:
+  java:
+    util:
+      logging:
+        FileHandler:
+          pattern: application_log.txt
+          limit: 1000000
+          count: 5
+          formatter: java.util.logging.SimpleFormatter
