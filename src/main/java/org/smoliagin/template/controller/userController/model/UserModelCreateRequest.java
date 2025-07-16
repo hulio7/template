@@ -13,9 +13,6 @@ public class UserModelCreateRequest {
     @Size(min = 2, max = 30)
     private String name;
 
-    @Size(max = 30)
-    private String surname;
-
     @Email
     private String email;
 

@@ -10,8 +10,6 @@ public class UserModelResponse {
 
     private String name;
 
-    private String surname;
-
     private String email;
 
 }
