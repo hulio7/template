@@ -2,15 +2,19 @@ package org.smoliagin.template.service.userService;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+
 import org.smoliagin.template.mapper.UserMapper;
 import org.smoliagin.template.repository.userRepository.UserRepository;
 import org.smoliagin.template.repository.userRepository.entity.User;
 import org.smoliagin.template.service.userService.dto.UserDto;
 import org.smoliagin.template.service.userService.dto.UserDtoResponse;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import static org.smoliagin.template.util.exceptions.ExceptionFactory.entityNotFoundException;
 import static org.smoliagin.template.util.messageSource.Message.UserMessage.USER_DELETE;
@@ -23,11 +27,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
     @Transactional
     @Override
     public UserDtoResponse createUser(UserDto dto) {
         User user = userMapper.toUser(dto);
+        log.info("User created");
         return userMapper.toDto(userRepository.save(user));
     }
 
@@ -58,5 +64,29 @@ public class UserServiceImpl implements UserService {
             return getMessage(USER_DELETE, id);
         }
         throw entityNotFoundException(USER_NOT_EXIST, id);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user != null) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user != null) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username).orElseThrow(()->
+                new UsernameNotFoundException("Пользователь с именем " + username + " не найден"));
     }
 }

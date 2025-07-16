@@ -4,10 +4,14 @@ spring:
   application:
     name: template
   datasource:
-    url: jdbc:postgresql://localhost:5432/sportclub
+    url: jdbc:postgresql://localhost:5432/template
     username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: true
 management:
   endpoints:
     web:
@@ -29,3 +33,8 @@ handlers:
           limit: 1000000
           count: 5
           formatter: java.util.logging.SimpleFormatter
+security:
+  jwt:
+    secret_key: 4eeab38d706831be4b36612ead768ef8182d1dd6f0e14e5dc934652e297fb16a
+    access_token_expiration: 36000000 # 10 hours
+    refresh_token_expiration: 252000000 # 7 days
