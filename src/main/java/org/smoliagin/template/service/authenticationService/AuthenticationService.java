@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface AuthenticationService {
 
-    void register(RegistrationRequestDto request);
+    String register(RegistrationRequestDto request);
 
     AuthenticationResponseDto authenticate(LoginRequestDto request);
 

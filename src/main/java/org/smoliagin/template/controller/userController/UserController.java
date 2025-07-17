@@ -4,12 +4,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.smoliagin.template.controller.userController.model.UserModelCreateRequest;
 import org.smoliagin.template.controller.userController.model.UserModelResponse;
 import org.smoliagin.template.controller.userController.model.UserModelUpdateRequest;
 import org.smoliagin.template.mapper.UserMapper;
 import org.smoliagin.template.service.userService.UserService;
 import org.smoliagin.template.service.userService.dto.UserDtoResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,14 +26,6 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @PostMapping("/user")
-    @Operation(summary = "Создание пользователя"
-            , description = "Пароль должен содержать минимум 8 символов, буквы и цифры")
-    public UserModelResponse createUser (@RequestBody @Valid UserModelCreateRequest modelRequest) {
-        UserDtoResponse dto= userService.createUser(userMapper.toDto(modelRequest));
-        return userMapper.toModelResponse(dto);
-    }
-
     @GetMapping("/users")
     @Operation(summary = "Получения списка пользователей")
     public List<UserModelResponse> getAllUsers () {
@@ -49,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/user/{id}")
-    @Operation(summary = "Обновление пользователя по id")
+    @Operation(summary = "Обновление пользователя по ID")
     public UserModelResponse updateUserById (@NotNull @PathVariable Long id
             , @RequestBody @Valid UserModelUpdateRequest modelRequest) {
         UserDtoResponse dtoResponse = userService.updateUserById(userMapper.toDto(modelRequest), id);
@@ -57,6 +49,7 @@ public class UserController {
     }
 
     @DeleteMapping("user/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Удаление пользователя по ID")
     public String deleteUserById (@PathVariable @NotNull Long id) {
        return userService.deleteUserById(id);

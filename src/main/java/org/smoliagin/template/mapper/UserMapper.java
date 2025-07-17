@@ -5,10 +5,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
+import org.smoliagin.template.controller.authenticationController.model.ModelRegistrationRequest;
 import org.smoliagin.template.controller.userController.model.UserModelCreateRequest;
 import org.smoliagin.template.controller.userController.model.UserModelResponse;
 import org.smoliagin.template.controller.userController.model.UserModelUpdateRequest;
 import org.smoliagin.template.repository.userRepository.entity.User;
+import org.smoliagin.template.service.authenticationService.dto.RegistrationRequestDto;
 import org.smoliagin.template.service.userService.dto.UserDto;
 import org.smoliagin.template.service.userService.dto.UserDtoResponse;
 
@@ -34,5 +36,10 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true)
     User toUser(@MappingTarget User entity, UserDto dto);
+
+    RegistrationRequestDto toDto(ModelRegistrationRequest modelRegistration);
+
+    @Mapping(target = "password", ignore = true)
+    User toUser(RegistrationRequestDto dto);
 }
 
