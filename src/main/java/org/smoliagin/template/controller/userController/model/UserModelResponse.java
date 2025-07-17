@@ -8,7 +8,7 @@ public class UserModelResponse {
 
     private Long id;
 
-    private String name;
+    private String username;
 
     private String email;
 

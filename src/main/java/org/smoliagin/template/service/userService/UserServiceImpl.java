@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import static org.smoliagin.template.util.exceptions.ExceptionFactory.entityNotFoundException;
 import static org.smoliagin.template.util.messageSource.Message.UserMessage.USER_DELETE;
 import static org.smoliagin.template.util.messageSource.Message.UserMessage.USER_NOT_EXIST;
+import static org.smoliagin.template.util.messageSource.Message.UserMessage.USER_NOT_EXIST_NAME;
 import static org.smoliagin.template.util.messageSource.MessageSourceFactory.getMessage;
 
 @Service
@@ -27,15 +27,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
-
-    @Transactional
-    @Override
-    public UserDtoResponse createUser(UserDto dto) {
-        User user = userMapper.toUser(dto);
-        log.info("User created");
-        return userMapper.toDto(userRepository.save(user));
-    }
 
     @Override
     public List<UserDtoResponse> getAllUsers() {
@@ -52,11 +43,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDtoResponse updateUserById(UserDto dto, @NotNull Long id) {
-        User entity = userRepository.findById(id).orElseThrow(()->entityNotFoundException(USER_NOT_EXIST, id));
-        User newEntity = userMapper.toUser(entity, dto);
+        User user = userRepository.findById(id).orElseThrow(()->entityNotFoundException(USER_NOT_EXIST, id));
+        User newEntity = userMapper.toUser(user, dto);
         return userMapper.toDto(userRepository.save(newEntity));
     }
 
+    @Transactional
     @Override
     public String deleteUserById(Long id) {
         if (userRepository.existsById(id)) {
@@ -86,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username).orElseThrow(()->
-                new UsernameNotFoundException("Пользователь с именем " + username + " не найден"));
+        return userRepository.findByUsername(username)
+                .orElseThrow(()-> entityNotFoundException(USER_NOT_EXIST_NAME, username));
     }
 }

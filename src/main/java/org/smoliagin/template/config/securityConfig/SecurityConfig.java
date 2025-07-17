@@ -1,6 +1,5 @@
 package org.smoliagin.template.config.securityConfig;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.smoliagin.template.service.userService.UserService;
 import org.smoliagin.template.util.filter.JwtFilter;
