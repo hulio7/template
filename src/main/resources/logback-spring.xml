@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <property name="APP_NAME" value="my-application"/>
+    <property name="ENV" value="test"/>
+    <property name="CORRELATION_ID_PATTERN" value="%X{correlationId:-none}"/>
+    <property name="HTTP_METHOD_PATTERN" value="%X{httpMethod:-unknown}"/>
+    <property name="HTTP_URI_PATTERN" value="%X{httpUri:-unknown}"/>
+
+    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <url>http://loki:3100/loki/api/v1/push</url>
+            <!-- Для аутентификации:
+            <auth>
+                <username>user</username>
+                <password>pass</password>
+            </auth> -->
+        </http>
+        <format>
+            <label>
+                <pattern>
+                    app=${APP_NAME},
+                    env=${ENV},
+                    correlationId=${CORRELATION_ID_PATTERN},
+                    method=${HTTP_METHOD_PATTERN},
+                    uri=${HTTP_URI_PATTERN},
+                    logger=%logger{20}
+                </pattern>
+            </label>
+            <message>
+                <pattern>
+                    [${CORRELATION_ID_PATTERN}]
+                    ${HTTP_METHOD_PATTERN}
+                    ${HTTP_URI_PATTERN} - %msg
+                </pattern>
+            </message>
+            <sortByTime>true</sortByTime>
+        </format>
+    </appender>
+
+    <root level="OFF">
+        <appender-ref ref="LOKI"/>
+    </root>
+
+    <logger name="org.smoliagin.template.util.filter.RequestResponseLogger" level="INFO" additivity="false">
+        <appender-ref ref="LOKI"/>
+    </logger>
+</configuration>
