@@ -8,6 +8,7 @@
     <property name="HTTP_METHOD_PATTERN" value="%X{httpMethod:-unknown}"/>
     <property name="HTTP_URI_PATTERN" value="%X{httpUri:-unknown}"/>
 
+    <!-- Appender для Loki -->
     <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
         <http>
             <url>http://loki:3100/loki/api/v1/push</url>
