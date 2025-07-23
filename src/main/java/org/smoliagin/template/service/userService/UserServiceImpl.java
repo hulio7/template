@@ -3,6 +3,9 @@ package org.smoliagin.template.service.userService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
+import org.smoliagin.template.infrastructure.output.data.criteria.EntityList;
+import org.smoliagin.template.infrastructure.output.data.criteria.FilteringAndSortingAdapter;
+import org.smoliagin.template.infrastructure.output.data.criteria.GetFilteredAndSortedUserListCommand;
 import org.smoliagin.template.mapper.UserMapper;
 import org.smoliagin.template.repository.userRepository.UserRepository;
 import org.smoliagin.template.repository.userRepository.entity.User;
@@ -13,8 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
+import static org.smoliagin.template.infrastructure.output.data.criteria.GetListFilterUtil.getListFilter;
 import static org.smoliagin.template.util.exceptions.ExceptionFactory.entityNotFoundException;
 import static org.smoliagin.template.util.messageSource.Message.UserMessage.USER_DELETE;
 import static org.smoliagin.template.util.messageSource.Message.UserMessage.USER_NOT_EXIST;
@@ -23,15 +25,16 @@ import static org.smoliagin.template.util.messageSource.MessageSourceFactory.get
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends FilteringAndSortingAdapter<User> implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @Override
-    public List<UserDtoResponse> getAllUsers() {
-        List<User> listEntity = userRepository.findAll();
-        return userMapper.toListDto(listEntity);
+    public EntityList<UserDtoResponse> getAllUsers(GetFilteredAndSortedUserListCommand searchCommand) {
+        var filter = getListFilter(searchCommand, User.class);
+        var listEntity = userRepository.findAll(getSpecification(filter), getPageable(filter));
+        return new EntityList<>(listEntity.getTotalElements(), listEntity.map(userMapper::toDto).getContent());
     }
 
     @Override

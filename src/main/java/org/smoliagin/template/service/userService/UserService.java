@@ -1,15 +1,15 @@
 package org.smoliagin.template.service.userService;
 
 import jakarta.validation.constraints.NotNull;
+import org.smoliagin.template.infrastructure.output.data.criteria.EntityList;
+import org.smoliagin.template.infrastructure.output.data.criteria.GetFilteredAndSortedUserListCommand;
 import org.smoliagin.template.service.userService.dto.UserDto;
 import org.smoliagin.template.service.userService.dto.UserDtoResponse;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.List;
-
 public interface UserService extends UserDetailsService {
 
-    List<UserDtoResponse> getAllUsers();
+    EntityList<UserDtoResponse> getAllUsers(GetFilteredAndSortedUserListCommand searchCommand);
 
     UserDtoResponse getUser(@NotNull Long id);
 
